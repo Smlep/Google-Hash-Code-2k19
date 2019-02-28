@@ -23,7 +23,34 @@ class Graph:
                     ex[0] += 1
                 if t[1] == en:
                     ex[1] += 1
-        return max(ex) < 2
+        return max(ex) > 1 or (t[1], t[0]) in l
+
+
+    def construct(self, conn, vertices):
+        l = [-1] * self.order
+        for s, e in vertices:
+            if l[s] == -1:
+                l[s] = e
+            else:
+                l[e] = s
+        path = []
+        i = 0
+        while i in l:
+            i += 1
+        M = [i]
+        l.append(i)
+        while len(M) < self.order:
+            if l[i] == -1:
+                a = 0
+                while a in l:
+                    a += 1
+                l[i] = a
+            path.append(i)
+            i = l[i]
+            M.append(i)
+        return path
+
+
 
     def longest(self):
         l = []
@@ -31,13 +58,19 @@ class Graph:
             l.append((k, self.weights[k]))
         l.sort(key=lambda x: x[1])
         vertices = []
+
         for i in range(self.order - 1):
             if not l:
                 break
-            select = l.pop()
+            select = l.pop()[0]
             while self.treeze(vertices, select):
                 if not l:
                     break
-                select = l.pop()
+                select = l.pop()[0]
             vertices.append(select)
-        return vertices
+        conn = [0] * self.order
+        for e in vertices:
+            conn[e[0]] += 1
+            conn[e[1]] += 1
+        res = self.construct(conn, vertices)
+        return res
