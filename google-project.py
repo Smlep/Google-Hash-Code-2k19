@@ -6,7 +6,11 @@ Created on Thu Feb 28 18:32:02 2019
 @author: Vincoux
 """
 
+import numpy
 import sys
+from graph import Graph
+
+local_compute = False
 
 
 class Photo:
@@ -17,6 +21,9 @@ class Photo:
         self.tags = []
         for tag_str in line_split[2:]:
             self.tags.append(tag_str)
+
+    def get_tags_length(self, other):
+        return len(set(self.tags + other.tags))
 
     def __str__(self):
         res = str(self.id)
@@ -65,13 +72,41 @@ class Slide:
         return res
 
 
-def process_file(filename, out):
-    photos = []
-    file = open(filename, "r")
-    lines = file.readlines()
-    for i in range(1, len(lines)):
-        photos.append(Photo(lines[i], i - 1))
+def compare_photos(photo1, photo2):
+    return len(photo1.tags) < len(photo2.tags)
 
+
+def mean_matrix(mat):
+    len = 0
+    sum = 0
+    for row in mat:
+        for el in row:
+            len += 1
+            sum += el
+    return sum / len
+
+
+def verticals_to_slides(verticals):
+    slides = []
+    nb_vertical = len(verticals)
+    if nb_vertical == 0:
+        return []
+
+    # verticals.sort(key=lambda photo: len(photo.tags))
+    #matrix = []
+    #for vertical1 in verticals:
+    #    row = []
+    #    for vertical2 in verticals:
+    #        row.append(vertical1.get_tags_length(vertical2))
+    #    matrix.append(row)
+
+    # for i in range(nb_vertical // 2):
+    #    slides.append(Slide(verticals[i], verticals[nb_vertical - 1 - i]))
+    #print(mean_matrix(matrix))
+    return slides
+
+
+def get_slides(photos):
     verticals = []
 
     slides = []
@@ -81,7 +116,24 @@ def process_file(filename, out):
         else:
             slides.append(Slide(photo))
 
-    print('score for ' + filename + ': ' + str(simulate_score(slides)))
+    vertical_slides = verticals_to_slides(verticals)
+
+    return slides + vertical_slides
+
+
+def process_file(filename, out):
+    photos = []
+    file = open(filename, "r")
+    lines = file.readlines()
+    for i in range(1, len(lines)):
+        photos.append(Photo(lines[i], i - 1))
+
+    slides = get_slides(photos)
+    graph = Graph(slides)
+    print(graph.longest())
+
+    if local_compute:
+        print('score for ' + filename + ': ' + str(simulate_score(slides)))
 
     out = open(out, 'w')
     out.write(str(len(slides)) + '\n')
@@ -96,8 +148,9 @@ def simulate_score(slides):
         score += (slides[i] - slides[i + 1])
     return score
 
+
 process_file('in/a_example.txt', 'out/a_example_out.txt')
-process_file('in/b_lovely_landscapes.txt', 'out/b_lovely_landscapes_out.txt')
+#process_file('in/b_lovely_landscapes.txt', 'out/b_lovely_landscapes_out.txt')
 process_file('in/c_memorable_moments.txt', 'out/c_memorable_moments_out.txt')
-process_file('in/d_pet_pictures.txt', 'out/d_pet_pictures_out.txt')
-process_file('in/e_shiny_selfies.txt', 'out/e_shiny_selfies_out.txt')
+#process_file('in/d_pet_pictures.txt', 'out/d_pet_pictures_out.txt')
+#process_file('in/e_shiny_selfies.txt', 'out/e_shiny_selfies_out.txt')
