@@ -114,6 +114,7 @@ def get_slides(photos):
 
 def dumb_sort(slides):
     for i in range(len(slides) - 1):
+        print('sorting ' + str(i) + '/' + str(len(slides)))
         best_index = 0
         best_compare = 0
         for j in range(i + 1, len(slides)):
@@ -159,8 +160,8 @@ def simulate_score(slides):
     return score
 
 
-process_file('in/a_example.txt', 'out/a_example_out.txt')
-process_file('in/b_lovely_landscapes.txt', 'out/b_lovely_landscapes_out.txt')
-process_file('in/c_memorable_moments.txt', 'out/c_memorable_moments_out.txt')
+#process_file('in/a_example.txt', 'out/a_example_out.txt')
+#process_file('in/b_lovely_landscapes.txt', 'out/b_lovely_landscapes_out.txt')
+#process_file('in/c_memorable_moments.txt', 'out/c_memorable_moments_out.txt')
 process_file('in/d_pet_pictures.txt', 'out/d_pet_pictures_out.txt')
-process_file('in/e_shiny_selfies.txt', 'out/e_shiny_selfies_out.txt')
+#process_file('in/e_shiny_selfies.txt', 'out/e_shiny_selfies_out.txt')
