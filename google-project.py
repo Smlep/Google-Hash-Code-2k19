@@ -6,11 +6,10 @@ Created on Thu Feb 28 18:32:02 2019
 @author: Vincoux
 """
 
-import numpy
 import sys
 from graph import Graph
 
-local_compute = False
+local_compute = True
 
 
 class Photo:
@@ -92,7 +91,7 @@ def verticals_to_slides(verticals):
     if nb_vertical == 0:
         return []
 
-    # verticals.sort(key=lambda photo: len(photo.tags))
+    verticals.sort(key=lambda photo: len(photo.tags))
     #matrix = []
     #for vertical1 in verticals:
     #    row = []
@@ -100,9 +99,8 @@ def verticals_to_slides(verticals):
     #        row.append(vertical1.get_tags_length(vertical2))
     #    matrix.append(row)
 
-    # for i in range(nb_vertical // 2):
-    #    slides.append(Slide(verticals[i], verticals[nb_vertical - 1 - i]))
-    #print(mean_matrix(matrix))
+    for i in range(nb_vertical // 2):
+        slides.append(Slide(verticals[i], verticals[nb_vertical - 1 - i]))
     return slides
 
 
@@ -129,8 +127,6 @@ def process_file(filename, out):
         photos.append(Photo(lines[i], i - 1))
 
     slides = get_slides(photos)
-    graph = Graph(slides)
-    print(graph.longest())
 
     if local_compute:
         print('score for ' + filename + ': ' + str(simulate_score(slides)))
@@ -150,7 +146,7 @@ def simulate_score(slides):
 
 
 process_file('in/a_example.txt', 'out/a_example_out.txt')
-#process_file('in/b_lovely_landscapes.txt', 'out/b_lovely_landscapes_out.txt')
+process_file('in/b_lovely_landscapes.txt', 'out/b_lovely_landscapes_out.txt')
 process_file('in/c_memorable_moments.txt', 'out/c_memorable_moments_out.txt')
-#process_file('in/d_pet_pictures.txt', 'out/d_pet_pictures_out.txt')
-#process_file('in/e_shiny_selfies.txt', 'out/e_shiny_selfies_out.txt')
+process_file('in/d_pet_pictures.txt', 'out/d_pet_pictures_out.txt')
+process_file('in/e_shiny_selfies.txt', 'out/e_shiny_selfies_out.txt')
