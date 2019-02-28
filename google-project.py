@@ -70,38 +70,31 @@ class Slide:
             res += ' ' + str(self.photos[1].id)
         return res
 
-
-def compare_photos(photo1, photo2):
-    return len(photo1.tags) < len(photo2.tags)
-
-
-def mean_matrix(mat):
-    len = 0
-    sum = 0
-    for row in mat:
-        for el in row:
-            len += 1
-            sum += el
-    return sum / len
-
-
 def verticals_to_slides(verticals):
-    slides = []
-    nb_vertical = len(verticals)
-    if nb_vertical == 0:
+    if not len(verticals):
         return []
-
-    verticals.sort(key=lambda photo: len(photo.tags))
-    #matrix = []
-    #for vertical1 in verticals:
-    #    row = []
-    #    for vertical2 in verticals:
-    #        row.append(vertical1.get_tags_length(vertical2))
-    #    matrix.append(row)
-
-    for i in range(nb_vertical // 2):
-        slides.append(Slide(verticals[i], verticals[nb_vertical - 1 - i]))
-    return slides
+    result = []
+    moy = 0
+    for i in range(1, len(verticals)):
+        moy += verticals[0].get_tags_length(verticals[i])
+    moy /= len(verticals)
+    while (len(verticals) > 1):
+        closest = 1000
+        index = 1
+        for i in range(1, min(len(verticals), 40)):
+            current = verticals[0].get_tags_length(verticals[i])
+            if (moy == current):
+                result.append(Slide(verticals[0], verticals[i]))
+                verticals.pop(i)
+                verticals.pop(0)
+                break
+            if (abs(moy - current) < closest):
+                closest = abs(moy - current)
+                index = i
+        result.append(Slide(verticals[0], verticals[index]))
+        verticals.pop(index)
+        verticals.pop(0)
+    return result
 
 
 def get_slides(photos):
