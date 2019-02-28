@@ -7,6 +7,8 @@ Created on Thu Feb 28 18:32:02 2019
 """
 
 import sys
+import random
+
 from graph import Graph
 
 local_compute = True
@@ -121,6 +123,11 @@ def process_file(filename, out):
 
     slides = get_slides(photos)
 
+    graph = Graph(slides)
+    print(graph.longest())
+
+   # slides.sort(key=lambda s: len(s.get_tags()))
+
     if local_compute:
         print('score for ' + filename + ': ' + str(simulate_score(slides)))
 
@@ -139,7 +146,7 @@ def simulate_score(slides):
 
 
 process_file('in/a_example.txt', 'out/a_example_out.txt')
-process_file('in/b_lovely_landscapes.txt', 'out/b_lovely_landscapes_out.txt')
+#process_file('in/b_lovely_landscapes.txt', 'out/b_lovely_landscapes_out.txt')
 process_file('in/c_memorable_moments.txt', 'out/c_memorable_moments_out.txt')
-process_file('in/d_pet_pictures.txt', 'out/d_pet_pictures_out.txt')
-process_file('in/e_shiny_selfies.txt', 'out/e_shiny_selfies_out.txt')
+#process_file('in/d_pet_pictures.txt', 'out/d_pet_pictures_out.txt')
+#process_file('in/e_shiny_selfies.txt', 'out/e_shiny_selfies_out.txt')
