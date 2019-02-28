@@ -15,23 +15,7 @@ class Graph:
                         self.adj[i].append(j)
                         self.weights[(i, j)] = w
 
-
-    def longest(self):
-        l = []
-        for k in self.weights.keys():
-            l.append((k, self.weights[k]))
-        l.sort(key = lambda x: x[1])
-        vertices = []
-        for i in range(self.order - 1):
-            if l == []:
-                break
-            select = l.pop()
-            while treeze(vertices, select):
-                select = l.pop()
-            vertices.append(select)
-
-
-    def treeze(l, t):
+    def treeze(self, l, t):
         ex = [0, 0]
         for e in l:
             for en in e:
@@ -41,3 +25,19 @@ class Graph:
                     ex[1] += 1
         return max(ex) < 2
 
+    def longest(self):
+        l = []
+        for k in self.weights.keys():
+            l.append((k, self.weights[k]))
+        l.sort(key=lambda x: x[1])
+        vertices = []
+        for i in range(self.order - 1):
+            if not l:
+                break
+            select = l.pop()
+            while self.treeze(vertices, select):
+                if not l:
+                    break
+                select = l.pop()
+            vertices.append(select)
+        return vertices
