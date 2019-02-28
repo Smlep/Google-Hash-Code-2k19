@@ -7,9 +7,6 @@ Created on Thu Feb 28 18:32:02 2019
 """
 
 import sys
-import random
-
-from graph import Graph
 
 local_compute = True
 
@@ -72,6 +69,7 @@ class Slide:
             res += ' ' + str(self.photos[1].id)
         return res
 
+
 def verticals_to_slides(verticals):
     if not len(verticals):
         return []
@@ -114,6 +112,20 @@ def get_slides(photos):
     return slides + vertical_slides
 
 
+def dumb_sort(slides):
+    for i in range(len(slides) - 1):
+        best_index = 0
+        best_compare = 0
+        for j in range(i + 1, len(slides)):
+            compare = slides[i] - slides[j]
+            if compare > best_compare:
+                best_compare = compare
+                best_index = j
+        tmp = slides[i + 1]
+        slides[i + 1] = slides[best_index]
+        slides[best_index] = tmp
+
+
 def process_file(filename, out):
     photos = []
     file = open(filename, "r")
@@ -123,10 +135,12 @@ def process_file(filename, out):
 
     slides = get_slides(photos)
 
-    graph = Graph(slides)
-    print(graph.longest())
+    # graph = Graph(slides)
+    # print(graph.longest())
 
-   # slides.sort(key=lambda s: len(s.get_tags()))
+    # slides.sort(key=lambda s: len(s.get_tags()))
+
+    dumb_sort(slides)
 
     if local_compute:
         print('score for ' + filename + ': ' + str(simulate_score(slides)))
@@ -146,7 +160,7 @@ def simulate_score(slides):
 
 
 process_file('in/a_example.txt', 'out/a_example_out.txt')
-#process_file('in/b_lovely_landscapes.txt', 'out/b_lovely_landscapes_out.txt')
+process_file('in/b_lovely_landscapes.txt', 'out/b_lovely_landscapes_out.txt')
 process_file('in/c_memorable_moments.txt', 'out/c_memorable_moments_out.txt')
-#process_file('in/d_pet_pictures.txt', 'out/d_pet_pictures_out.txt')
-#process_file('in/e_shiny_selfies.txt', 'out/e_shiny_selfies_out.txt')
+process_file('in/d_pet_pictures.txt', 'out/d_pet_pictures_out.txt')
+process_file('in/e_shiny_selfies.txt', 'out/e_shiny_selfies_out.txt')
