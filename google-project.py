@@ -11,7 +11,7 @@ import sys
 
 class Photo:
     def __init__(self, line, id):
-        line_split = line.split(' ')
+        line_split = line[:-1].split(' ')
         self.id = id
         self.vertical = line_split[0] == 'V'
         self.tags = []
@@ -47,7 +47,16 @@ class Slide:
     def get_tags(self):
         if len(self.photos) == 2:
             return list(set(self.photos[0].tags + self.photos[1].tags))
-        return self.photos[0]
+        return self.photos[0].tags
+
+    def __sub__(self, other):
+        core = 0
+        t1 = self.get_tags()
+        t2 = other.get_tags()
+        for tag in t1:
+            if tag in t2:
+                core += 1
+        return min(core, len(t1) - core, len(t2) - core)
 
     def __str__(self):
         res = str(self.photos[0].id)
@@ -72,12 +81,20 @@ def process_file(filename, out):
         else:
             slides.append(Slide(photo))
 
+    print('score for ' + filename + ': ' + str(simulate_score(slides)))
+
     out = open(out, 'w')
     out.write(str(len(slides)) + '\n')
     for slide in slides:
         out.write(str(slide) + '\n')
     out.close()
 
+
+def simulate_score(slides):
+    score = 0
+    for i in range(len(slides) - 1):
+        score += (slides[i] - slides[i + 1])
+    return score
 
 process_file('in/a_example.txt', 'out/a_example_out.txt')
 process_file('in/b_lovely_landscapes.txt', 'out/b_lovely_landscapes_out.txt')
