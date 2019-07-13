@@ -7,6 +7,7 @@ Created on Thu Feb 28 18:32:02 2019
 """
 
 import sys
+import random
 
 local_compute = True
 
@@ -141,14 +142,25 @@ def process_file(filename, out):
 
     # slides.sort(key=lambda s: len(s.get_tags()))
 
-    dumb_sort(slides)
+    #dumb_sort(slides)
+
+    score = 0
+    save_slides = None
+    for i in range(10):
+        random.shuffle(slides)
+        score_ = simulate_score(slides)
+        if score_ > score:
+            save_slides = slides
+            score = score_
+        print(score_)
+
 
     if local_compute:
-        print('score for ' + filename + ': ' + str(simulate_score(slides)))
+        print('score for ' + filename + ': ' + str(simulate_score(save_slides)))
 
     out = open(out, 'w')
-    out.write(str(len(slides)) + '\n')
-    for slide in slides:
+    out.write(str(len(save_slides)) + '\n')
+    for slide in save_slides:
         out.write(str(slide) + '\n')
     out.close()
 
@@ -160,8 +172,8 @@ def simulate_score(slides):
     return score
 
 
-#process_file('in/a_example.txt', 'out/a_example_out.txt')
-#process_file('in/b_lovely_landscapes.txt', 'out/b_lovely_landscapes_out.txt')
-#process_file('in/c_memorable_moments.txt', 'out/c_memorable_moments_out.txt')
+process_file('in/a_example.txt', 'out/a_example_out.txt')
+process_file('in/b_lovely_landscapes.txt', 'out/b_lovely_landscapes_out.txt')
+process_file('in/c_memorable_moments.txt', 'out/c_memorable_moments_out.txt')
 process_file('in/d_pet_pictures.txt', 'out/d_pet_pictures_out.txt')
-#process_file('in/e_shiny_selfies.txt', 'out/e_shiny_selfies_out.txt')
+process_file('in/e_shiny_selfies.txt', 'out/e_shiny_selfies_out.txt')
